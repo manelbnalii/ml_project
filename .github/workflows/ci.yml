@@ -1,0 +1,44 @@
+name: CI Pipeline — Customer Churn
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: make install
+
+      - name: Format check
+        run: make format
+
+      - name: Lint
+        run: make lint
+
+      - name: Security
+        run: make security
+
+      - name: Tests
+        run: make test
+
+      - name: Prepare data
+        run: make prepare
+
+      - name: Train model
+        run: make train
+
+      - name: Evaluate model
+        run: make evaluate
