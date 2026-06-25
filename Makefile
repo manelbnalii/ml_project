@@ -101,6 +101,13 @@ api:
 	$(PYTHON) -m uvicorn app:app --reload --host 0.0.0.0 --port 8000
 
 # ─────────────────────────────
+# MLFLOW UI
+# ─────────────────────────────
+mlflow:
+	mlflow ui --host 0.0.0.0 --port 5000 &
+	@echo "✅ MLflow disponible sur http://127.0.0.1:5000"
+
+# ─────────────────────────────
 # HELP
 # ─────────────────────────────
 

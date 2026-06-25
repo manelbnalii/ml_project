@@ -1,6 +1,8 @@
 # modification test CI/CD
 import pandas as pd
 import joblib
+import mlflow
+import mlflow.sklearn
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
@@ -38,11 +40,34 @@ def prepare_data(filepath: str, test_size: float = 0.2, random_state: int = 1):
     return X_train_scaled, X_test_scaled, y_train, y_test, scaler
 
 
-def train_model(X_train, y_train, n_estimators: int = 100, random_state: int = 42):
-    model = RandomForestClassifier(n_estimators=n_estimators, random_state=random_state)
+def train_model(X_train, y_train, n_estimators=100, random_state=42):
+    """
+    Entraîner le modèle avec suivi MLflow
+    """
+    mlflow.set_experiment("customer_churn")
 
-    model.fit(X_train, y_train)
-    print(f"[train_model] Modèle entraîné avec {n_estimators} arbres.")
+    with mlflow.start_run():
+        # Entraînement
+        model = RandomForestClassifier(
+            n_estimators=n_estimators,
+            random_state=random_state
+        )
+        model.fit(X_train, y_train)
+
+        # Log des hyperparamètres
+        mlflow.log_param("n_estimators", n_estimators)
+        mlflow.log_param("random_state", random_state)
+
+        # Log des métriques
+        accuracy = model.score(X_train, y_train)
+        mlflow.log_metric("train_accuracy", accuracy)
+
+        # Log du modèle
+        mlflow.sklearn.log_model(model, "random_forest_model")
+
+        print(f"[train_model] Modèle entraîné avec {n_estimators} arbres.")
+        print(f"[train_model] Train accuracy : {accuracy * 100:.2f}%")
+
     return model
 
 
