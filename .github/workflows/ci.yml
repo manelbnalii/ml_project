@@ -10,9 +10,8 @@ jobs:
   pipeline:
     runs-on: ubuntu-latest
     env:
-      MLFLOW_ALLOW_FILE_STORE: "true"
-      MLFLOW_ENABLE_LOG_MODEL: "false"
-
+      MLFLOW_TRACKING_URI: "sqlite:///mlflow.db"
+      MLFLOW_ARTIFACT_ROOT: "./mlartifacts"
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -39,6 +38,9 @@ jobs:
 
       - name: Prepare data
         run: make prepare
+
+      - name: Reset MLflow DB
+        run: rm -f mlflow.db
 
       - name: Train model
         run: make train

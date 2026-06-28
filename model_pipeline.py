@@ -41,14 +41,10 @@ def prepare_data(filepath: str, test_size: float = 0.2, random_state: int = 1):
 
 
 def train_model(X_train, y_train, n_estimators=100, random_state=42):
-    """
-    Entraîner le modèle avec suivi MLflow
-    """
     import os
-    os.environ["MLFLOW_ARTIFACT_ROOT"] = "./mlartifacts"
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
+    tracking_uri = os.getenv("MLFLOW_TRACKING_URI", "sqlite:///mlflow.db")
+    mlflow.set_tracking_uri(tracking_uri)
     mlflow.set_experiment("customer_churn")
-
     with mlflow.start_run():
         # Entraînement
         model = RandomForestClassifier(
