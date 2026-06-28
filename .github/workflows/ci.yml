@@ -9,6 +9,8 @@ on:
 jobs:
   pipeline:
     runs-on: ubuntu-latest
+    env:
+      MLFLOW_ALLOW_FILE_STORE: "true"
 
     steps:
       - name: Checkout code

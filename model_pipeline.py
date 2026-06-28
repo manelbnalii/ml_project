@@ -44,7 +44,7 @@ def train_model(X_train, y_train, n_estimators=100, random_state=42):
     """
     Entraîner le modèle avec suivi MLflow
     """
-    mlflow.set_tracking_uri("./mlruns")
+    mlflow.set_tracking_uri("sqlite:///mlflow.db")
     mlflow.set_experiment("customer_churn")
 
     with mlflow.start_run():
