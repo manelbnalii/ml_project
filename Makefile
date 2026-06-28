@@ -107,6 +107,35 @@ mlflow:
 	mlflow ui --host 0.0.0.0 --port 5000 &
 	@echo "✅ MLflow disponible sur http://127.0.0.1:5000"
 
+
+# ─────────────────────────────
+# DOCKER
+# ─────────────────────────────
+
+IMAGE_NAME = manel-bnnali-classe-mlops
+DOCKER_USER = manelbenali
+
+docker-build:
+	@echo "🐳 Construction de l'image Docker..."
+	docker build -t $(IMAGE_NAME) .
+	@echo "✅ Image construite."
+
+docker-run:
+	@echo "🚀 Lancement du conteneur..."
+	docker run -d -p 8000:8000 --name churn-api $(IMAGE_NAME)
+	@echo "✅ API disponible sur http://localhost:8000"
+
+docker-push:
+	@echo "📤 Push de l'image sur Docker Hub..."
+	docker tag $(IMAGE_NAME):latest $(DOCKER_USER)/$(IMAGE_NAME):latest
+	docker push $(DOCKER_USER)/$(IMAGE_NAME):latest
+	@echo "✅ Image pushée sur Docker Hub."
+
+docker-stop:
+	@echo "🛑 Arrêt du conteneur..."
+	docker stop churn-api
+	docker rm churn-api
+	@echo "✅ Conteneur arrêté."
 # ─────────────────────────────
 # HELP
 # ─────────────────────────────
