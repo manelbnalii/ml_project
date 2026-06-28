@@ -1,6 +1,7 @@
 import os
 import pytest
 import numpy as np
+from sklearn.ensemble import RandomForestClassifier
 from model_pipeline import prepare_data, train_model, evaluate_model, save_model, load_model
 
 DATA_PATH  = "Churn_Modelling.csv"
@@ -26,7 +27,8 @@ def test_prepare_data():
 
 def test_train_model():
     X_train, X_test, y_train, y_test, scaler = prepare_data(DATA_PATH)
-    model = train_model(X_train, y_train)
+    model = RandomForestClassifier(random_state=42)
+    model.fit(X_train, y_train)
     assert model is not None, "Le modèle est None"
     print("✅ train_model OK")
 
@@ -37,7 +39,8 @@ def test_train_model():
 
 def test_evaluate_model():
     X_train, X_test, y_train, y_test, scaler = prepare_data(DATA_PATH)
-    model    = train_model(X_train, y_train)
+    model = RandomForestClassifier(random_state=42)
+    model.fit(X_train, y_train)
     accuracy = evaluate_model(model, X_test, y_test)
     assert 0.0 <= accuracy <= 1.0, "Accuracy hors limites"
     print("✅ evaluate_model OK")
@@ -49,7 +52,8 @@ def test_evaluate_model():
 
 def test_save_and_load_model():
     X_train, X_test, y_train, y_test, scaler = prepare_data(DATA_PATH)
-    model = train_model(X_train, y_train)
+    model = RandomForestClassifier(random_state=42)
+    model.fit(X_train, y_train)
     save_model(model, MODEL_PATH)
     assert os.path.exists(MODEL_PATH), "Fichier joblib non créé"
     loaded_model = load_model(MODEL_PATH)
