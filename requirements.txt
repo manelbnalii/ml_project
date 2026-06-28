@@ -3,7 +3,7 @@ pandas
 scikit-learn
 matplotlib
 jupyter
-mlflow
+mlflow==2.19.0
 fastapi
 uvicorn
 joblib 
