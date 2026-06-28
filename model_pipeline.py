@@ -6,7 +6,7 @@ import mlflow.sklearn
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from sklearn.metrics import ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 
@@ -58,15 +58,21 @@ def train_model(X_train, y_train, n_estimators=100, random_state=42):
         mlflow.log_param("random_state", random_state)
 
         # Log des métriques
-        accuracy = model.score(X_train, y_train)
-        mlflow.log_metric("train_accuracy", accuracy)
+        y_pred = model.predict(X_train)
+        train_accuracy = accuracy_score(y_train, y_pred)
+        train_precision = precision_score(y_train, y_pred)
+        train_recall = recall_score(y_train, y_pred)
+        train_f1 = f1_score(y_train, y_pred)
 
+        mlflow.log_metric("train_accuracy", train_accuracy)
+        mlflow.log_metric("train_precision", train_precision)
+        mlflow.log_metric("train_recall", train_recall)
+        mlflow.log_metric("train_f1", train_f1)
         # Log du modèle
         mlflow.sklearn.log_model(model, "random_forest_model")
 
         print(f"[train_model] Modèle entraîné avec {n_estimators} arbres.")
-        print(f"[train_model] Train accuracy : {accuracy * 100:.2f}%")
-
+        print(f"[train_model] Train accuracy : {train_accuracy * 100:.2f}%")
     return model
 
 
