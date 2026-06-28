@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MLFLOW_ALLOW_FILE_STORE: "true"
+      MLFLOW_ENABLE_LOG_MODEL: "false"
 
     steps:
       - name: Checkout code
